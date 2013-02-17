@@ -41,7 +41,6 @@ public class Renderable {
 
     public void setSize(final float w, final float h) {
         mSize.set(w, h);
-        System.out.println(w + ", " + h + "        " + mSize.x + ", " + mSize.y);
     }
 
     final public void setSize(final Vector2 size) {

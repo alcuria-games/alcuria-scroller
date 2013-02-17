@@ -3,9 +3,13 @@
  */
 package net.alcuria.scroller.screens;
 
+import net.alcuria.scroller.ScrollerGame;
+import net.alcuria.scroller.renderables.Animated;
 import net.alcuria.scroller.renderables.Renderable;
+import net.alcuria.scroller.utils.AlcuriaTextureRegionFactory;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 
 /**
  * @author juni.kim
@@ -13,27 +17,50 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class TestScreen extends AlcuriaScreen {
     private TextureRegion trBg;
 
-    private float mPhase;
-
     public TestScreen() {
         super();
 
         setPosition(0, 0);
 
         loadTexture("bg.png");
+        loadTexture("particle.png");
 
         trBg = new TextureRegion(getTexture("bg.png"));
 
-        Renderable bg = new Renderable();
-        bg.setTextureRegion(trBg);
-        bg.setSize(getSize());
-        bg.setPosition(0, 0);
-        addChild(bg);
+        Renderable sprite = new Renderable();
+        sprite.setTextureRegion(trBg);
+        sprite.setSize(getSize());
+        sprite.setPosition(0, 0);
+        addChild(sprite);
+
+        for (int i = 0; i < 50; i++) {
+            float size = MathUtils.random(4f, 16f);
+            Animated clip = new TestSprite();
+            clip.setTextureRegions(AlcuriaTextureRegionFactory.createGridTextureRegions(getTexture("particle.png"), 64, 64));
+            clip.setPosition(MathUtils.random(ScrollerGame.DESIGNED_WIDTH), MathUtils.random(ScrollerGame.DESIGNED_HEIGHT));
+            clip.setSize(size, size);
+            clip.setFps(1);
+            addChild(clip);
+        }
     }
 
-    @Override
-    public boolean update(final float deltaTime) {
+    private static class TestSprite extends Animated {
+        @Override
+        public boolean update(final float deltaTime) {
+            float x = getPosition().x - getSize().x * deltaTime;
+            float y = getPosition().y - getSize().y * deltaTime;
 
-        return super.update(deltaTime);
+            if (x <= -getSize().x) {
+                x = ScrollerGame.DESIGNED_WIDTH + getSize().x;
+            }
+
+            if (y <= -getSize().y) {
+                y = ScrollerGame.DESIGNED_HEIGHT + getSize().y;
+            }
+
+            setPosition(x, y);
+
+            return super.update(deltaTime);
+        }
     }
 }

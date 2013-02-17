@@ -11,7 +11,8 @@ public class ScrollerGame implements ApplicationListener {
     public static final float DESIGNED_WIDTH = 360f;
     public static final float DESIGNED_HEIGHT = 640f;
     public static final float ASPECT_RATIO = DESIGNED_WIDTH / DESIGNED_HEIGHT;
-    public static final float S_PER_FRAME = 1 / 60f;
+    public static final int FPS = 60;
+    public static final float S_PER_FRAME = 1f / FPS;
     public static final Vector2 DIMENSIONS = new Vector2();
     public static final Vector2 BORDER = new Vector2();
     public static final ScrollerGame INSTANCE = new ScrollerGame();

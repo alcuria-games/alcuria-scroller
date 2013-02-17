@@ -34,6 +34,11 @@ public class AlcuriaScreen extends RenderGroup implements Screen {
     }
 
     @Override
+    public void setPosition(final float x, final float y) {
+        super.setPosition(-x, -y);
+    }
+
+    @Override
     public void render(final float delta) {
         if (!mIsActive) {
             return;
