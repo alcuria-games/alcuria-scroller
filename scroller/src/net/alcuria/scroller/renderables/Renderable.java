@@ -11,11 +11,11 @@ import com.badlogic.gdx.math.Vector2;
  * @author juni.kim
  */
 public class Renderable {
+    public boolean mIsPaused;
+
     protected final Vector2 mPosition;
     protected final Vector2 mSize;
-
     protected TextureRegion mTextureRegion;
-
     protected Container mParent;
 
     public Renderable() {
@@ -85,9 +85,11 @@ public class Renderable {
     }
 
     public void pause() {
+        mIsPaused = true;
     }
 
     public void resume() {
+        mIsPaused = false;
     }
 
     public void setTextureRegion(final TextureRegion region) {

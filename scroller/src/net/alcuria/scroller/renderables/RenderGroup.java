@@ -20,7 +20,7 @@ public class RenderGroup extends Renderable implements Container {
         Iterator<Renderable> itr = mRenderables.iterator();
         while (itr.hasNext()) {
             Renderable child = itr.next();
-            if (!child.update(deltaTime)) {
+            if (!child.mIsPaused && !child.update(deltaTime)) {
                 itr.remove();
                 child.onRemoved();
             }
@@ -42,6 +42,8 @@ public class RenderGroup extends Renderable implements Container {
         for (Renderable child : mRenderables) {
             child.pause();
         }
+
+        super.pause();
     }
 
     @Override
@@ -49,6 +51,8 @@ public class RenderGroup extends Renderable implements Container {
         for (Renderable child : mRenderables) {
             child.resume();
         }
+
+        super.resume();
     }
 
     @Override

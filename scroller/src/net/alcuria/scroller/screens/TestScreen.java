@@ -40,6 +40,7 @@ public class TestScreen extends AlcuriaScreen {
             clip.setPosition(MathUtils.random(ScrollerGame.DESIGNED_WIDTH), MathUtils.random(ScrollerGame.DESIGNED_HEIGHT));
             clip.setSize(size, size);
             clip.setFps(1);
+            clip.setFrame(MathUtils.random(3));
             addChild(clip);
         }
     }

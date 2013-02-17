@@ -14,21 +14,23 @@ public class Animated extends Renderable {
     private TextureRegion[] mTextureRegions;
     private float mElapsedTime;
     private float mSecPerFrame;
+    private int mCurrentFrame;
 
     public Animated() {
         super();
         mElapsedTime = 0f;
         mSecPerFrame = ScrollerGame.S_PER_FRAME;
+        mCurrentFrame = 0;
     }
 
     @Override
     public boolean update(final float deltaTime) {
         if (mTextureRegions != null && mTextureRegions.length > 0) {
             mElapsedTime += deltaTime;
-
-            int index = (int) (mTextureRegions.length * mElapsedTime / mSecPerFrame);
-            index %= mTextureRegions.length;
-            setTextureRegion(mTextureRegions[index]);
+            if (mElapsedTime >= mSecPerFrame) {
+                mElapsedTime -= mSecPerFrame;
+                setFrame(mCurrentFrame + 1);
+            }
         }
 
         return super.update(deltaTime);
@@ -40,6 +42,16 @@ public class Animated extends Renderable {
         }
 
         mSecPerFrame = 1f / fps;
+    }
+
+    public void setFrame(int frame) {
+        if (mTextureRegions == null) {
+            throw new IllegalStateException("setFrame can't be called until setTextureRegions is called");
+        }
+
+        frame %= mTextureRegions.length;
+        setTextureRegion(mTextureRegions[frame]);
+        mCurrentFrame = frame;
     }
 
     public void setTextureRegions(final TextureRegion... frames) {
