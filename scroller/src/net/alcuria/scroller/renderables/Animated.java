@@ -11,10 +11,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * @author juni.kim
  */
 public class Animated extends Renderable {
-    private TextureRegion[] mTextureRegions;
-    private float mElapsedTime;
-    private float mSecPerFrame;
-    private int mCurrentFrame;
+    protected TextureRegion[] mTextureRegions;
+    protected float mElapsedTime;
+    protected float mSecPerFrame;
+    protected int mCurrentFrame;
 
     public Animated() {
         super();
@@ -56,5 +56,6 @@ public class Animated extends Renderable {
 
     public void setTextureRegions(final TextureRegion... frames) {
         mTextureRegions = frames;
+        setFrame(0);
     }
 }

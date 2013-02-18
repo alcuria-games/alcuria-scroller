@@ -94,6 +94,10 @@ public class Renderable {
 
     public void setTextureRegion(final TextureRegion region) {
         mTextureRegion = region;
+
+        if (mTextureRegion != null && (mSize.x == 0 || mSize.y == 0)) {
+            setSize(mTextureRegion.getRegionWidth(), mTextureRegion.getRegionHeight());
+        }
     }
 
     final public TextureRegion getTextureRegion() {

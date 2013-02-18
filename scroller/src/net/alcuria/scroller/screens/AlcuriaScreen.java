@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.alcuria.scroller.ScrollerGame;
 import net.alcuria.scroller.renderables.RenderGroup;
+import net.alcuria.scroller.utils.ScrollerInputProcessor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -104,6 +105,15 @@ public class AlcuriaScreen extends RenderGroup implements Screen {
         mSpriteBatch = null;
 
         mIsDisposed = true;
+    }
+
+    public Camera getCamera() {
+        return mCamera;
+    }
+
+    public boolean onTouchEvent(final ScrollerInputProcessor.TouchEvent event, final float x, final float y) {
+
+        return true;
     }
 
     protected void initialize() {

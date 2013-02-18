@@ -2,6 +2,7 @@ package net.alcuria.scroller;
 
 import net.alcuria.scroller.screens.AlcuriaScreen;
 import net.alcuria.scroller.screens.TestScreen;
+import net.alcuria.scroller.utils.ScrollerInputProcessor;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -30,6 +31,7 @@ public class ScrollerGame implements ApplicationListener {
     public void create() {
         Gdx.gl.glClearColor(0, 0, 0, 1f);
         setScreen(new TestScreen());
+        Gdx.input.setInputProcessor(new ScrollerInputProcessor());
     }
 
     @Override
@@ -78,5 +80,9 @@ public class ScrollerGame implements ApplicationListener {
 
         mScreen = screen;
         mScreen.show();
+    }
+
+    public AlcuriaScreen getScreen() {
+        return mScreen;
     }
 }
