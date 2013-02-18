@@ -15,12 +15,16 @@ public class Renderable {
 
     protected final Vector2 mPosition;
     protected final Vector2 mSize;
+    protected final Vector2 mScale;
     protected TextureRegion mTextureRegion;
     protected Container mParent;
+    protected float mRotation;
 
     public Renderable() {
         mPosition = new Vector2();
         mSize = new Vector2();
+        mScale = new Vector2(1.0f, 1.0f);
+        mRotation = 0.0f;
     }
 
     public void setPosition(final float x, final float y) {
@@ -41,6 +45,12 @@ public class Renderable {
 
     public void setSize(final float w, final float h) {
         mSize.set(w, h);
+
+        if (mTextureRegion != null) {
+            float scaleX = w / mTextureRegion.getRegionWidth();
+            float scaleY = h / mTextureRegion.getRegionHeight();
+            mScale.set(scaleX, scaleY);
+        }
     }
 
     final public void setSize(final Vector2 size) {
@@ -55,20 +65,44 @@ public class Renderable {
         return mSize;
     }
 
+    public void setScale(final float xScale, final float yScale) {
+        mScale.set(xScale, yScale);
+
+        if (mTextureRegion != null) {
+            float width = mTextureRegion.getRegionWidth() * xScale;
+            float height = mTextureRegion.getRegionHeight() * yScale;
+            mSize.set(width, height);
+        }
+    }
+
+    final public void setScale(final Vector2 scale) {
+        if (scale == null) {
+            throw new IllegalArgumentException("scale cannot be null");
+        }
+
+        setScale(scale.x, scale.y);
+    }
+
+    public Vector2 getScale() {
+        return mScale;
+    }
+
     public boolean update(final float deltaTime) {
         return true;
     }
 
     public void draw(final SpriteBatch batch) {
-        if (getTextureRegion() != null) {
+        if (mTextureRegion != null) {
             float x = getPosition().x;
             float y = getPosition().y;
+            float width = mTextureRegion.getRegionWidth();
+            float height = mTextureRegion.getRegionHeight();
             Container parent = getParent();
             if (parent != null && parent instanceof Renderable) {
                 x += ((Renderable) parent).getPosition().x;
                 y += ((Renderable) parent).getPosition().y;
             }
-            batch.draw(getTextureRegion(), x, y, getSize().x, getSize().y);
+            batch.draw(getTextureRegion(), x, y, width / 2f, height / 2f, width, height, mScale.x, mScale.y, mRotation);
         }
     }
 
@@ -95,8 +129,8 @@ public class Renderable {
     public void setTextureRegion(final TextureRegion region) {
         mTextureRegion = region;
 
-        if (mTextureRegion != null && (mSize.x == 0 || mSize.y == 0)) {
-            setSize(mTextureRegion.getRegionWidth(), mTextureRegion.getRegionHeight());
+        if (region != null && mSize.x == 0 && mSize.y == 0) {
+            setSize(region.getRegionWidth(), region.getRegionHeight());
         }
     }
 

@@ -3,7 +3,6 @@
  */
 package net.alcuria.scroller.renderables;
 
-
 /**
  * @author juni.kim
  */
@@ -33,11 +32,9 @@ public class ScrollingBackground extends RenderGroup {
     public void setSize(final float w, final float h) {
         super.setSize(w, h);
 
-        float y = 0;
         for (Renderable child : mRenderables) {
             float scale = w / child.getSize().x;
             child.setSize(child.getSize().x * scale, child.getSize().y * scale);
-            y += child.getSize().y;
         }
     }
 
