@@ -3,8 +3,8 @@
  */
 package net.alcuria.scroller.utils;
 
+import net.alcuria.scroller.AlcuriaScreen;
 import net.alcuria.scroller.ScrollerGame;
-import net.alcuria.scroller.screens.AlcuriaScreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;

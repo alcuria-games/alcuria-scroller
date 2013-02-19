@@ -1,14 +1,12 @@
 /**
  * 
  */
-package net.alcuria.scroller.screens;
+package net.alcuria.scroller.test;
 
+import net.alcuria.scroller.AlcuriaScreen;
 import net.alcuria.scroller.ScrollerGame;
 import net.alcuria.scroller.renderables.RenderGroup;
 import net.alcuria.scroller.renderables.Renderable;
-import net.alcuria.scroller.renderables.ScrollingBackground;
-import net.alcuria.scroller.renderables.TestSprite;
-import net.alcuria.scroller.renderables.Thing;
 import net.alcuria.scroller.utils.AlcuriaTextureRegionFactory;
 import net.alcuria.scroller.utils.ScrollerInputProcessor.TouchEvent;
 

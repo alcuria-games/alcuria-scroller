@@ -1,9 +1,10 @@
 /**
  * 
  */
-package net.alcuria.scroller.renderables;
+package net.alcuria.scroller.test;
 
 import net.alcuria.scroller.ScrollerGame;
+import net.alcuria.scroller.renderables.Renderable;
 
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;

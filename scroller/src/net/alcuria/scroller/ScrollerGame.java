@@ -1,7 +1,6 @@
 package net.alcuria.scroller;
 
-import net.alcuria.scroller.screens.AlcuriaScreen;
-import net.alcuria.scroller.screens.TestScreen;
+import net.alcuria.scroller.test.TestScreen;
 import net.alcuria.scroller.utils.ScrollerInputProcessor;
 
 import com.badlogic.gdx.ApplicationListener;

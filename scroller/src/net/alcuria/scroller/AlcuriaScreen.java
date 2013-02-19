@@ -1,12 +1,11 @@
 /**
  * 
  */
-package net.alcuria.scroller.screens;
+package net.alcuria.scroller;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import net.alcuria.scroller.ScrollerGame;
 import net.alcuria.scroller.renderables.RenderGroup;
 import net.alcuria.scroller.utils.ScrollerInputProcessor;
 

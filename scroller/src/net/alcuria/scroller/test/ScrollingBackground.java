@@ -1,7 +1,10 @@
 /**
  * 
  */
-package net.alcuria.scroller.renderables;
+package net.alcuria.scroller.test;
+
+import net.alcuria.scroller.renderables.RenderGroup;
+import net.alcuria.scroller.renderables.Renderable;
 
 /**
  * @author juni.kim
