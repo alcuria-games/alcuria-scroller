@@ -34,7 +34,7 @@ public class ScrollingBackground extends RenderGroup {
 
         for (Renderable child : mRenderables) {
             float scale = w / child.getSize().x;
-            child.setSize(child.getSize().x * scale, child.getSize().y * scale);
+            child.setScale(scale * child.getScale().x, scale * child.getScale().y);
         }
     }
 

@@ -95,14 +95,12 @@ public class Renderable {
         if (mTextureRegion != null) {
             float x = getPosition().x;
             float y = getPosition().y;
-            float width = mTextureRegion.getRegionWidth();
-            float height = mTextureRegion.getRegionHeight();
             Container parent = getParent();
             if (parent != null && parent instanceof Renderable) {
                 x += ((Renderable) parent).getPosition().x;
                 y += ((Renderable) parent).getPosition().y;
             }
-            batch.draw(getTextureRegion(), x, y, width / 2f, height / 2f, width, height, mScale.x, mScale.y, mRotation);
+            batch.draw(getTextureRegion(), x, y, mSize.x / 2f, mSize.y / 2f, mSize.x, mSize.y, 1.0f, 1.0f, mRotation);
         }
     }
 

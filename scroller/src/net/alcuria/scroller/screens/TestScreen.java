@@ -4,18 +4,16 @@
 package net.alcuria.scroller.screens;
 
 import net.alcuria.scroller.ScrollerGame;
-import net.alcuria.scroller.renderables.Animated;
 import net.alcuria.scroller.renderables.RenderGroup;
 import net.alcuria.scroller.renderables.Renderable;
 import net.alcuria.scroller.renderables.ScrollingBackground;
+import net.alcuria.scroller.renderables.TestSprite;
+import net.alcuria.scroller.renderables.Thing;
 import net.alcuria.scroller.utils.AlcuriaTextureRegionFactory;
 import net.alcuria.scroller.utils.ScrollerInputProcessor.TouchEvent;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pool.Poolable;
 
 /**
  * @author juni.kim
@@ -23,7 +21,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 public class TestScreen extends AlcuriaScreen {
     private TextureRegion[] mParticleTrs;
     private RenderGroup mParticleLayer;
-    private Renderable mThing;
+    private Thing mThing;
     private Vector2 mTouchDownPoint;
     private Vector2 mAnchorPoint;
 
@@ -47,6 +45,7 @@ public class TestScreen extends AlcuriaScreen {
             bg.addChild(sprite);
         }
         bg.setScrollSpeed(20f);
+        bg.setPosition(0, 0);
         bg.setSize(ScrollerGame.DESIGNED_WIDTH, ScrollerGame.DESIGNED_HEIGHT);
         addChild(bg);
 
@@ -54,7 +53,7 @@ public class TestScreen extends AlcuriaScreen {
         mParticleLayer = new RenderGroup();
         addChild(mParticleLayer);
 
-        mThing = new Renderable();
+        mThing = new Thing(this);
         mThing.setTextureRegion(new TextureRegion(getTexture("thing.png")));
         mThing.setSize(64, 64);
         mThing.setPosition(180f - 32f, 180f - 32f);
@@ -79,64 +78,69 @@ public class TestScreen extends AlcuriaScreen {
         if (event == TouchEvent.DOWN) {
             mTouchDownPoint.set(x, y);
             mAnchorPoint.set(mThing.getPosition());
+            mThing.setFiring(true);
         } else {
             float diffX = x - mTouchDownPoint.x;
             float diffY = y - mTouchDownPoint.y;
 
-            mThing.setPosition(mAnchorPoint.x + diffX * 2f, mAnchorPoint.y + diffY * 2f);
+            mThing.setPosition(mAnchorPoint.x + diffX * 1.5f, mAnchorPoint.y + diffY * 1.5f);
 
-            float size = MathUtils.random(4f, 16f);
-            float clipX = mThing.getPosition().x + mThing.getSize().x / 2f;
-            float clipY = mThing.getPosition().y + mThing.getSize().y;
-            Animated clip = TestSprite.POOL.obtain();
-            clip.setTextureRegions(mParticleTrs);
-            clip.setPosition(clipX, clipY);
-            clip.setSize(size, size);
-            clip.setFps(1);
-            clip.setFrame(MathUtils.random(3));
-            mParticleLayer.addChild(clip);
+            if (event == TouchEvent.UP) {
+                mThing.setFiring(false);
+                mThing.setWeapon(mThing.getWeapon() + 1);
+            }
         }
 
         return true;
     }
 
-    private static class TestSprite extends Animated implements Poolable {
-        private final static Pool<TestSprite> POOL = new Pool<TestSprite>() {
-            @Override
-            protected TestSprite newObject() {
-                return new TestSprite();
-            }
-        };
+    public void fireShot() {
+        float clipX = mThing.getPosition().x + mThing.getSize().x / 2f;
+        float clipY = mThing.getPosition().y + mThing.getSize().y;
 
-        @Override
-        public boolean update(final float deltaTime) {
-            float x = getPosition().x;
-            float y = getPosition().y + getSize().y * deltaTime * 10f;
-            setPosition(x, y);
+        int weapon = mThing.getWeapon();
+        Renderable sprite;
+        switch (weapon) {
+            case 0:
+                sprite = TestSprite.POOL.obtain();
+                sprite.setTextureRegion(mParticleTrs[weapon]);
+                sprite.setPosition(clipX, clipY);
+                sprite.setSize(32f, 32f);
+                mParticleLayer.addChild(sprite);
+                break;
+            case 1:
+                sprite = TestSprite.POOL.obtain();
+                sprite.setTextureRegion(mParticleTrs[weapon]);
+                sprite.setPosition(clipX - 32f, clipY);
+                sprite.setSize(16f, 16f);
+                mParticleLayer.addChild(sprite);
 
-            if (y >= ScrollerGame.DESIGNED_HEIGHT + getSize().y) {
-                return false;
-            }
-
-            return super.update(deltaTime);
-        }
-
-        @Override
-        public void onRemoved() {
-            super.onRemoved();
-            POOL.free(this);
-        }
-
-        @Override
-        public void reset() {
-            mTextureRegion = null;
-            mTextureRegions = null;
-            mElapsedTime = 0;
-            mSecPerFrame = ScrollerGame.S_PER_FRAME;
-            mCurrentFrame = 0;
-
-            setPosition(0, 0);
-            setSize(0, 0);
+                sprite = TestSprite.POOL.obtain();
+                sprite.setTextureRegion(mParticleTrs[weapon]);
+                sprite.setPosition(clipX + 32f, clipY);
+                sprite.setSize(16f, 16f);
+                mParticleLayer.addChild(sprite);
+                break;
+            case 2:
+                for (int i = -2; i <= 2; i++) {
+                    sprite = TestSprite.POOL.obtain();
+                    sprite.setTextureRegion(mParticleTrs[weapon]);
+                    sprite.setPosition(clipX + i * 16f, clipY);
+                    sprite.setSize(10f, 10f + i * i * 5f);
+                    mParticleLayer.addChild(sprite);
+                }
+                break;
+            case 3:
+                float diff = (mThing.getSize().x - 8f) / 10f;
+                float x = mThing.getPosition().x;
+                for (int i = 0; i < 10; i++) {
+                    sprite = TestSprite.POOL.obtain();
+                    sprite.setTextureRegion(mParticleTrs[weapon]);
+                    sprite.setPosition(x + diff * i, clipY);
+                    sprite.setSize(8f, 8f);
+                    mParticleLayer.addChild(sprite);
+                }
+                break;
         }
     }
 }
