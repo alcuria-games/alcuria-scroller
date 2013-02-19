@@ -4,7 +4,6 @@
 package net.alcuria.scroller.test;
 
 import net.alcuria.scroller.AlcuriaScreen;
-import net.alcuria.scroller.ScrollerGame;
 import net.alcuria.scroller.renderables.RenderGroup;
 import net.alcuria.scroller.renderables.Renderable;
 import net.alcuria.scroller.utils.AlcuriaTextureRegionFactory;
@@ -28,23 +27,13 @@ public class TestScreen extends AlcuriaScreen {
 
         setPosition(0, 0);
 
-        loadTexture("bg/0.png");
-        loadTexture("bg/1.png");
-        loadTexture("bg/2.png");
-        loadTexture("bg/3.png");
-        loadTexture("bg/4.png");
         loadTexture("particle.png");
         loadTexture("thing.png");
 
         ScrollingBackground bg = new ScrollingBackground();
-        for (int i = 0; i < 3; i++) {
-            Renderable sprite = new Renderable();
-            sprite.setTextureRegion(new TextureRegion(getTexture(String.format("bg/%d.png", i))));
-            bg.addChild(sprite);
-        }
         bg.setScrollSpeed(20f);
-        bg.setPosition(0, 0);
-        bg.setSize(ScrollerGame.DESIGNED_WIDTH, ScrollerGame.DESIGNED_HEIGHT);
+        bg.setTextureRegions(AlcuriaTextureRegionFactory.loadDirectory(this, "bg"));
+        bg.initialize();
         addChild(bg);
 
         mParticleTrs = AlcuriaTextureRegionFactory.createGridTextureRegions(getTexture("particle.png"), 64, 64);
@@ -64,6 +53,7 @@ public class TestScreen extends AlcuriaScreen {
     @Override
     public void dispose() {
         TestSprite.POOL.clear();
+        BackgroundPiece.POOL.clear();
         super.dispose();
     }
 

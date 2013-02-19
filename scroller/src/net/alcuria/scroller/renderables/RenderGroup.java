@@ -56,6 +56,27 @@ public class RenderGroup extends Renderable implements Container {
     }
 
     @Override
+    public void onRemoved() {
+        clear();
+        super.onRemoved();
+    }
+
+    @Override
+    public void setScale(final float xScale, final float yScale) {
+        float ratioX = xScale / mScale.x;
+        float ratioY = yScale / mScale.y;
+
+        for (Renderable child : mRenderables) {
+            float x = child.getPosition().x * ratioX;
+            float y = child.getPosition().y * ratioY;
+            child.setScale(xScale, yScale);
+            child.setPosition(x, y);
+        }
+
+        super.setScale(xScale, yScale);
+    }
+
+    @Override
     public boolean addChild(final Renderable child) {
         if (mRenderables.add(child)) {
             child.onAdded(this);
@@ -71,6 +92,15 @@ public class RenderGroup extends Renderable implements Container {
             return true;
         }
         return false;
+    }
+
+    public void clear() {
+        Iterator<Renderable> itr = mRenderables.iterator();
+        while (itr.hasNext()) {
+            Renderable child = itr.next();
+            itr.remove();
+            child.onRemoved();
+        }
     }
 
     @Override

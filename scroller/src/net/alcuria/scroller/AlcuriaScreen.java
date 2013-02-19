@@ -131,13 +131,13 @@ public class AlcuriaScreen extends RenderGroup implements Screen {
         mIsDisposed = false;
     }
 
-    protected void loadTexture(final String name) {
+    public void loadTexture(final String name) {
         if (mTextures.get(name) == null) {
             mTextures.put(name, new Texture(Gdx.files.internal(name)));
         }
     }
 
-    protected Texture getTexture(final String name) {
+    public Texture getTexture(final String name) {
         return mTextures.get(name);
     }
 }
