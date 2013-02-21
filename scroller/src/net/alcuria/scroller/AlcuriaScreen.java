@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * @author Juni
@@ -29,8 +30,13 @@ public class AlcuriaScreen extends RenderGroup implements Screen {
     private boolean mIsActive;
     private boolean mIsDisposed;
 
+    private TextureRegion mGradient;
+
     public AlcuriaScreen() {
         initialize();
+
+        loadTexture("gradient.png");
+        mGradient = new TextureRegion(getTexture("gradient.png"));
     }
 
     @Override
@@ -54,6 +60,9 @@ public class AlcuriaScreen extends RenderGroup implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         mSpriteBatch.begin();
         draw(mSpriteBatch);
+
+        mSpriteBatch.draw(mGradient, -100, 0, 110f, mCamera.viewportHeight);
+        mSpriteBatch.draw(mGradient, ScrollerGame.DESIGNED_WIDTH + 100, 0, -110f, mCamera.viewportHeight);
         mSpriteBatch.end();
     }
 
@@ -75,6 +84,7 @@ public class AlcuriaScreen extends RenderGroup implements Screen {
         ((OrthographicCamera) mCamera).setToOrtho(false, camWidth, camHeight);
         ((OrthographicCamera) mCamera).translate(-ScrollerGame.BORDER.x, -ScrollerGame.BORDER.y);
         ((OrthographicCamera) mCamera).update();
+
         mSpriteBatch.setProjectionMatrix(mCamera.combined);
     }
 

@@ -15,19 +15,23 @@ public class Animated extends Renderable {
     protected float mElapsedTime;
     protected float mSecPerFrame;
     protected int mCurrentFrame;
+    protected int mTargetFrame;
+    protected boolean mIsPlaying;
+    protected Listener mListener;
 
     public Animated() {
         super();
         mElapsedTime = 0f;
         mSecPerFrame = ScrollerGame.S_PER_FRAME;
-        mCurrentFrame = 0;
+
+        play();
     }
 
     @Override
     public boolean update(final float deltaTime) {
-        if (mTextureRegions != null && mTextureRegions.length > 0) {
+        if (mIsPlaying && mTextureRegions != null && mTextureRegions.length > 0) {
             mElapsedTime += deltaTime;
-            if (mElapsedTime >= mSecPerFrame) {
+            while (mElapsedTime >= mSecPerFrame) {
                 mElapsedTime -= mSecPerFrame;
                 setFrame(mCurrentFrame + 1);
             }
@@ -46,16 +50,63 @@ public class Animated extends Renderable {
 
     public void setFrame(int frame) {
         if (mTextureRegions == null) {
-            throw new IllegalStateException("setFrame can't be called until setTextureRegions is called");
+            mCurrentFrame = frame;
+            return;
         }
 
         frame %= mTextureRegions.length;
         setTextureRegion(mTextureRegions[frame]);
         mCurrentFrame = frame;
+
+        if (mIsPlaying && mCurrentFrame == mTargetFrame) {
+            stop();
+        }
     }
 
     public void setTextureRegions(final TextureRegion... frames) {
         mTextureRegions = frames;
         setFrame(0);
+    }
+
+    public void play() {
+        mIsPlaying = true;
+        mTargetFrame = -1;
+
+        setFrame(0);
+    }
+
+    public void play(final int targetFrame) {
+        mIsPlaying = true;
+        mTargetFrame = targetFrame;
+    }
+
+    public void play(final int fromFrame, final int targetFrame) {
+        mIsPlaying = true;
+        mTargetFrame = targetFrame;
+
+        setFrame(fromFrame);
+    }
+
+    public void stop() {
+        final boolean was = mIsPlaying;
+        mIsPlaying = false;
+
+        if (was && mListener != null) {
+            mListener.onStop(this);
+        }
+    }
+
+    public void stopAt(final int frame) {
+        stop();
+
+        setFrame(frame);
+    }
+
+    public void setListener(final Listener listener) {
+        mListener = listener;
+    }
+
+    public static interface Listener {
+        public void onStop(Animated animated);
     }
 }

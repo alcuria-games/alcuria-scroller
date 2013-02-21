@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 /**
  * @author juni.kim
  */
-public class RenderGroup extends Renderable implements Container {
+public class RenderGroup extends Renderable {
     protected List<Renderable> mRenderables = new LinkedList<Renderable>();
 
     @Override
@@ -76,7 +76,6 @@ public class RenderGroup extends Renderable implements Container {
         super.setScale(xScale, yScale);
     }
 
-    @Override
     public boolean addChild(final Renderable child) {
         if (mRenderables.add(child)) {
             child.onAdded(this);
@@ -85,7 +84,6 @@ public class RenderGroup extends Renderable implements Container {
         return false;
     }
 
-    @Override
     public boolean removeChild(final Renderable child) {
         if (mRenderables.remove(child)) {
             child.onRemoved();
@@ -103,7 +101,6 @@ public class RenderGroup extends Renderable implements Container {
         }
     }
 
-    @Override
     public Renderable getChild(final Renderable child) {
         for (Renderable myChild : mRenderables) {
             if (myChild.equals(child)) {

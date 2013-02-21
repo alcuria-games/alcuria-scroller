@@ -17,7 +17,7 @@ public class Renderable {
     protected final Vector2 mSize;
     protected final Vector2 mScale;
     protected TextureRegion mTextureRegion;
-    protected Container mParent;
+    protected RenderGroup mParent;
     protected float mRotation;
 
     public Renderable() {
@@ -44,6 +44,10 @@ public class Renderable {
     }
 
     public void setSize(final float w, final float h) {
+        if (mSize.x == w && mSize.y == h) {
+            return;
+        }
+
         mSize.set(w, h);
 
         if (mTextureRegion != null) {
@@ -66,6 +70,10 @@ public class Renderable {
     }
 
     public void setScale(final float xScale, final float yScale) {
+        if (mScale.x == xScale && mScale.y == yScale) {
+            return;
+        }
+
         mScale.set(xScale, yScale);
 
         if (mTextureRegion != null) {
@@ -87,6 +95,14 @@ public class Renderable {
         return mScale;
     }
 
+    public void setRotation(final float rotation) {
+        mRotation = rotation;
+    }
+
+    public float getRotation() {
+        return mRotation;
+    }
+
     public boolean update(final float deltaTime) {
         return true;
     }
@@ -95,20 +111,20 @@ public class Renderable {
         if (mTextureRegion != null) {
             float x = getPosition().x;
             float y = getPosition().y;
-            Container parent = getParent();
-            if (parent != null && parent instanceof Renderable) {
-                x += ((Renderable) parent).getPosition().x;
-                y += ((Renderable) parent).getPosition().y;
+            RenderGroup parent = getParent();
+            if (parent != null) {
+                x += parent.getPosition().x;
+                y += parent.getPosition().y;
             }
             batch.draw(getTextureRegion(), x, y, mSize.x / 2f, mSize.y / 2f, mSize.x, mSize.y, 1.0f, 1.0f, mRotation);
         }
     }
 
-    public Container getParent() {
+    public RenderGroup getParent() {
         return mParent;
     }
 
-    public void onAdded(final Container parent) {
+    public void onAdded(final RenderGroup parent) {
         mParent = parent;
     }
 

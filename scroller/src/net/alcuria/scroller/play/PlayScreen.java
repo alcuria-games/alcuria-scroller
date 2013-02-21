@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.alcuria.scroller.test;
+package net.alcuria.scroller.play;
 
 import net.alcuria.scroller.AlcuriaScreen;
 import net.alcuria.scroller.renderables.RenderGroup;
@@ -15,20 +15,22 @@ import com.badlogic.gdx.math.Vector2;
 /**
  * @author juni.kim
  */
-public class TestScreen extends AlcuriaScreen {
+public class PlayScreen extends AlcuriaScreen {
     private TextureRegion[] mParticleTrs;
     private RenderGroup mParticleLayer;
-    private Thing mThing;
+    private Hal mHal;
     private Vector2 mTouchDownPoint;
     private Vector2 mAnchorPoint;
 
-    public TestScreen() {
+    public PlayScreen() {
         super();
 
         setPosition(0, 0);
 
         loadTexture("particle.png");
         loadTexture("thing.png");
+        loadTexture("hal/head.png");
+        loadTexture("hal/body.png");
 
         ScrollingBackground bg = new ScrollingBackground();
         bg.setScrollSpeed(20f);
@@ -40,11 +42,10 @@ public class TestScreen extends AlcuriaScreen {
         mParticleLayer = new RenderGroup();
         addChild(mParticleLayer);
 
-        mThing = new Thing(this);
-        mThing.setTextureRegion(new TextureRegion(getTexture("thing.png")));
-        mThing.setSize(64, 64);
-        mThing.setPosition(180f - 32f, 180f - 32f);
-        addChild(mThing);
+        mHal = new Hal(this);
+        mHal.createTextureRegions(getTexture("hal/head.png"), getTexture("hal/body.png"));
+        mHal.setPosition(180f - 32f, 180f - 32f);
+        addChild(mHal);
 
         mTouchDownPoint = new Vector2();
         mAnchorPoint = new Vector2();
@@ -65,17 +66,17 @@ public class TestScreen extends AlcuriaScreen {
 
         if (event == TouchEvent.DOWN) {
             mTouchDownPoint.set(x, y);
-            mAnchorPoint.set(mThing.getPosition());
-            mThing.setFiring(true);
+            mAnchorPoint.set(mHal.getPosition());
+            mHal.setFiring(true);
         } else {
             float diffX = x - mTouchDownPoint.x;
             float diffY = y - mTouchDownPoint.y;
 
-            mThing.setPosition(mAnchorPoint.x + diffX * 1.5f, mAnchorPoint.y + diffY * 1.5f);
+            mHal.setPosition(mAnchorPoint.x + diffX * 1.5f, mAnchorPoint.y + diffY * 1.5f);
 
             if (event == TouchEvent.UP) {
-                mThing.setFiring(false);
-                mThing.setWeapon(mThing.getWeapon() + 1);
+                mHal.setFiring(false);
+                mHal.setWeapon(mHal.getWeapon() + 1);
             }
         }
 
@@ -83,10 +84,10 @@ public class TestScreen extends AlcuriaScreen {
     }
 
     public void fireShot() {
-        float clipX = mThing.getPosition().x + mThing.getSize().x / 2f;
-        float clipY = mThing.getPosition().y + mThing.getSize().y;
+        float clipX = mHal.getPosition().x + mHal.getSize().x / 2f;
+        float clipY = mHal.getPosition().y + mHal.getSize().y;
 
-        int weapon = mThing.getWeapon();
+        int weapon = mHal.getWeapon();
         Renderable sprite;
         switch (weapon) {
             case 0:
@@ -119,8 +120,8 @@ public class TestScreen extends AlcuriaScreen {
                 }
                 break;
             case 3:
-                float diff = (mThing.getSize().x - 8f) / 10f;
-                float x = mThing.getPosition().x;
+                float diff = (mHal.getSize().x - 8f) / 10f;
+                float x = mHal.getPosition().x;
                 for (int i = 0; i < 10; i++) {
                     sprite = TestSprite.POOL.obtain();
                     sprite.setTextureRegion(mParticleTrs[weapon]);

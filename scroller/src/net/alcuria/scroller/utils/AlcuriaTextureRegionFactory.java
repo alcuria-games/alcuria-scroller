@@ -60,6 +60,22 @@ public class AlcuriaTextureRegionFactory {
         return array;
     }
 
+    public static TextureRegion[] getFrames(final TextureRegion[] from, final int... indices) {
+        if (indices == null || indices.length == 0) {
+            return from;
+        }
+
+        TextureRegion[] to = new TextureRegion[indices.length];
+        int index = 0;
+        for (int i : indices) {
+            i %= from.length;
+            to[index] = from[i];
+            index++;
+        }
+
+        return to;
+    }
+
     private static boolean isImage(final String extension) {
         return ("jpg".equalsIgnoreCase(extension) || "png".equalsIgnoreCase(extension));
     }
