@@ -31,13 +31,13 @@ public class Hal extends RenderGroup implements Animated.Listener {
         mScreen = screen;
 
         mBody = new Animated();
-        mBody.setFps(16);
+        mBody.setFps(32);
         mBody.stop();
         mBody.setListener(this);
         addChild(mBody);
 
         mHead = new Animated();
-        mHead.setFps(16);
+        mHead.setFps(32);
         addChild(mHead);
 
         setSize(64, 64);
@@ -78,9 +78,9 @@ public class Hal extends RenderGroup implements Animated.Listener {
 
     public void createTextureRegions(final Texture headTexture, final Texture bodyTexture) {
         TextureRegion[] base = AlcuriaTextureRegionFactory.createGridTextureRegions(bodyTexture, 64, 64);
-        mRaiseAnimation = AlcuriaTextureRegionFactory.getFrames(base, 0, 1, 2, 3);
-        mLoopAnimation = AlcuriaTextureRegionFactory.getFrames(base, 4, 5, 6, 7);
-        mLowerAnimation = AlcuriaTextureRegionFactory.getFrames(base, 4, 3, 2, 1);
+        mRaiseAnimation = AlcuriaTextureRegionFactory.getFrames(base, 0, 1, 2, 3, 4, 5, 6, 7);
+        mLoopAnimation = AlcuriaTextureRegionFactory.getFrames(base, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+        mLowerAnimation = AlcuriaTextureRegionFactory.getFrames(base, 7, 6, 5, 4, 3, 2, 1);
 
         mBody.setTextureRegions(mRaiseAnimation);
         mHead.setTextureRegions(AlcuriaTextureRegionFactory.createGridTextureRegions(headTexture, 64, 64));
