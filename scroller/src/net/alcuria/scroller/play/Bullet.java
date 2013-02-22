@@ -30,7 +30,7 @@ public class Bullet extends Animated implements Poolable {
         return bullet;
     }
 
-    public final static Pool<Bullet> POOL = new Pool<Bullet>() {
+    public final static Pool<Bullet> POOL = new Pool<Bullet>(512) {
         @Override
         protected Bullet newObject() {
             return new Bullet();
@@ -58,7 +58,7 @@ public class Bullet extends Animated implements Poolable {
                     setRotation(mRotation + (mRotation > 0 ? 10f : -10f) * deltaTime);
                     float scale = getScale().x * 0.99f;
                     setScale(scale, scale);
-                    if (mBulletTime >= 0.75f) {
+                    if (mBulletTime >= 1.25f) {
                         return false;
                     }
                 } else {

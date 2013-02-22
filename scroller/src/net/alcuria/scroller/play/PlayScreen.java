@@ -28,6 +28,8 @@ public class PlayScreen extends AlcuriaScreen {
     private Vector2 mTouchDownPoint;
     private Vector2 mAnchorPoint;
 
+    private float mTimeFactor;
+
     public PlayScreen() {
         super();
 
@@ -75,9 +77,7 @@ public class PlayScreen extends AlcuriaScreen {
         mTouchDownPoint = new Vector2();
         mAnchorPoint = new Vector2();
 
-        for (int i = 0; i < 1000; i++) {
-            Bullet.POOL.free(Bullet.POOL.obtain());
-        }
+        mTimeFactor = 1f;
     }
 
     @Override
@@ -96,6 +96,7 @@ public class PlayScreen extends AlcuriaScreen {
             mTouchDownPoint.set(x, y);
             mAnchorPoint.set(mHal.getPosition());
             mHal.setFiring(true);
+            mTimeFactor = 1f;
         } else {
             float diffX = x - mTouchDownPoint.x;
             float diffY = y - mTouchDownPoint.y;
@@ -105,10 +106,16 @@ public class PlayScreen extends AlcuriaScreen {
             if (event == TouchEvent.UP) {
                 mHal.setFiring(false);
                 mHal.setWeapon(mHal.getWeapon() + 1);
+                mTimeFactor = 1f;
             }
         }
 
         return true;
+    }
+
+    @Override
+    public boolean update(final float deltaTime) {
+        return super.update(deltaTime * mTimeFactor);
     }
 
     public void fireShot() {
@@ -148,7 +155,7 @@ public class PlayScreen extends AlcuriaScreen {
                 mBulletLayer.addChild(bullet);
 
                 for (int i = 0; i < 5; i++) {
-                    scale = MathUtils.random(0.1251f, 0.25f);
+                    scale = MathUtils.random(0.25f, 0.5f);
 
                     effect = Bullet.newInstance(weapon, true);
                     effect.setTextureRegions(mRayTrs);
