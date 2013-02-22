@@ -50,6 +50,9 @@ public class Bullet extends Animated implements Poolable {
                     if (mBulletTime >= 0.75f) {
                         return false;
                     }
+                } else {
+                    float scale = 0.5f * MathUtils.sin(mBulletTime * 4) + 1.75f;
+                    setScale(scale, scale);
                 }
 
                 break;

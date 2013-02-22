@@ -4,6 +4,7 @@
 package net.alcuria.scroller.play;
 
 import net.alcuria.scroller.AlcuriaScreen;
+import net.alcuria.scroller.ScrollerGame;
 import net.alcuria.scroller.renderables.RenderGroup;
 import net.alcuria.scroller.utils.AlcuriaTextureRegionFactory;
 import net.alcuria.scroller.utils.ScrollerInputProcessor.TouchEvent;
@@ -20,9 +21,13 @@ public class PlayScreen extends AlcuriaScreen {
     private TextureRegion[][] mBulletTrs;
     private TextureRegion[] mBallTrs;
     private TextureRegion[] mRayTrs;
+    private TextureRegion[] mRedRayTrs;
     private TextureRegion[] mArcTrs;
 
+    private TextureRegion[] mBatTrs;
+
     private RenderGroup mParticleLayer;
+    private RenderGroup mMonsterLayer;
     private RenderGroup mBulletLayer;
     private Hal mHal;
     private Vector2 mTouchDownPoint;
@@ -38,6 +43,7 @@ public class PlayScreen extends AlcuriaScreen {
         loadTexture("particle.png");
         loadTexture("thing.png");
         loadTexture("sprites/bullets.png");
+        loadTexture("sprites/bat.png");
         loadTexture("hal/head.png");
         loadTexture("hal/body.png");
 
@@ -49,6 +55,9 @@ public class PlayScreen extends AlcuriaScreen {
 
         mParticleLayer = new RenderGroup();
         addChild(mParticleLayer);
+
+        mMonsterLayer = new RenderGroup();
+        addChild(mMonsterLayer);
 
         Texture t = getTexture("sprites/bullets.png");
         mBulletTrs = new TextureRegion[4][36];
@@ -67,7 +76,10 @@ public class PlayScreen extends AlcuriaScreen {
 
         mBallTrs = AlcuriaTextureRegionFactory.getFrames(mBulletTrs[0], 0, 1, 2, 3, 4, 5);
         mRayTrs = AlcuriaTextureRegionFactory.getFrames(mBulletTrs[1], 6, 7, 8, 9, 10, 11);
+        mRedRayTrs = AlcuriaTextureRegionFactory.getFrames(mBulletTrs[2], 6, 7, 8, 9, 10, 11);
         mArcTrs = AlcuriaTextureRegionFactory.getFrames(mBulletTrs[2], 12, 13, 14, 15, 16, 17);
+
+        mBatTrs = AlcuriaTextureRegionFactory.createGridTextureRegions(getTexture("sprites/bat.png"), 64, 64);
 
         mHal = new Hal(this);
         mHal.createTextureRegions(getTexture("hal/head.png"), getTexture("hal/body.png"));
@@ -83,6 +95,8 @@ public class PlayScreen extends AlcuriaScreen {
     @Override
     public void dispose() {
         BackgroundPiece.POOL.clear();
+        Bullet.POOL.clear();
+        Monster.POOL.clear();
         super.dispose();
     }
 
@@ -106,7 +120,7 @@ public class PlayScreen extends AlcuriaScreen {
             if (event == TouchEvent.UP) {
                 mHal.setFiring(false);
                 mHal.setWeapon(mHal.getWeapon() + 1);
-                mTimeFactor = 1f;
+                mTimeFactor = 0.25f;
             }
         }
 
@@ -115,6 +129,17 @@ public class PlayScreen extends AlcuriaScreen {
 
     @Override
     public boolean update(final float deltaTime) {
+        if (MathUtils.random() <= 0.0625f) {
+            Monster monster = Monster.newInstance(Monster.BAT, mHal);
+            monster.setTextureRegions(mBatTrs);
+            monster.setPosition(MathUtils.random(ScrollerGame.DESIGNED_WIDTH), ScrollerGame.DESIGNED_HEIGHT - 1);
+
+            float scale = MathUtils.random(0.4f, 0.75f);
+            monster.setScale(scale, scale);
+            monster.setFrame(MathUtils.random(mBatTrs.length - 1));
+            mMonsterLayer.addChild(monster);
+        }
+
         return super.update(deltaTime * mTimeFactor);
     }
 
@@ -131,8 +156,6 @@ public class PlayScreen extends AlcuriaScreen {
             case Bullet.BALL:
                 bullet = Bullet.newInstance(weapon, false);
                 bullet.setTextureRegions(mBallTrs);
-                scale = MathUtils.random(0.5f) + 1.75f;
-                bullet.setScale(scale, scale);
                 bullet.setPosition(clipX - 8f, clipY - 8f);
                 mBulletLayer.addChild(bullet);
 
@@ -170,10 +193,26 @@ public class PlayScreen extends AlcuriaScreen {
                     scale = 3 - 0.5f * i * i;
                     bullet = Bullet.newInstance(weapon, false);
                     bullet.setTextureRegions(mArcTrs);
-                    bullet.setPosition(clipX - 8f, clipY - 8f);
+                    bullet.setPosition(clipX - 8f * scale, clipY - 8f * scale);
                     bullet.setScale(scale, scale);
                     bullet.setRotation(i * 15f);
                     mBulletLayer.addChild(bullet);
+                }
+
+                for (int i = 0; i < 3; i++) {
+                    effect = Bullet.newInstance(weapon, false);
+                    effect.setTextureRegions(mRedRayTrs);
+                    effect.setScale(0.5f, 1.25f);
+                    effect.setRotation(i * 15f + 7.5f);
+                    effect.setPosition(clipX - 8f, clipY - 8f);
+                    mParticleLayer.addChild(effect);
+
+                    effect = Bullet.newInstance(weapon, false);
+                    effect.setTextureRegions(mRedRayTrs);
+                    effect.setScale(0.5f, 1.25f);
+                    effect.setRotation(i * -15f - 7.5f);
+                    effect.setPosition(clipX - 4f, clipY - 10f);
+                    mParticleLayer.addChild(effect);
                 }
                 break;
         }
