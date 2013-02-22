@@ -87,7 +87,7 @@ public class Hal extends RenderGroup implements Animated.Listener {
     }
 
     public void setWeapon(final int which) {
-        mCurrentWeapon = which % 4;
+        mCurrentWeapon = which % 3;
     }
 
     public int getWeapon() {

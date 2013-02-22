@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.alcuria.scroller.play;
+package net.alcuria.scroller.test;
 
 import net.alcuria.scroller.ScrollerGame;
 import net.alcuria.scroller.renderables.Renderable;
